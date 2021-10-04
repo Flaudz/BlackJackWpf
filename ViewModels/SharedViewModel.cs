@@ -258,7 +258,10 @@ namespace WpfPrac.ViewModels
                 {
                     Dealer.Cards.Add(DealerTempCard);
                     Dealer.Value += DealerTempCard.Value;
-                    Dealer.CheckAce();
+                    if (Dealer.CheckBlackJack())
+                    {
+                        CheckWinner();
+                    }
                 }
                 else
                 {

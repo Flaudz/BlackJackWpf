@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using WpfPrac.Models;
@@ -103,11 +104,6 @@ namespace WpfPrac.Models
         {
             if(this.Cards.Count == 2 && this.Value == 21)
             {
-                foreach (Card card in this.Cards)
-                {
-                    if (card.Name.Contains("10"))
-                        return false;
-                }
                 return true;
             }
             return false;

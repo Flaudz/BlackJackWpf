@@ -21,7 +21,9 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
-        
+
+        <TextBlock Text="{Binding Player.Value}"/>
+
         <!-- Dealer Cards -->
         <ItemsControl ItemsSource="{Binding Path=Dealer.Cards, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">
             <ItemsControl.ItemsPanel>
