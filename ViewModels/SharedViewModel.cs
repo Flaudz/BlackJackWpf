@@ -215,8 +215,14 @@ namespace WpfPrac.ViewModels
                 Player.Money -= Player.Bet;
                 Player.Bet *= 2;
                 Hit();
-                if(Player.Value <= 21)
+                if(Player.Value > 21)
+                {
                     CheckWinner();
+                }
+                else
+                {
+                    DealersTurn();
+                }
             }
             else if(choice == "no")
             {
