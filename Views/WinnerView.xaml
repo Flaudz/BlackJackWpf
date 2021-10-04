@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="WpfPrac.Views.WinnerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfPrac.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200"
+             DataContext="{StaticResource SharedViewModel}">
+    <Grid Visibility="{Binding ShowWinner, UpdateSourceTrigger=PropertyChanged}" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Dealer Cards -->
+        <ItemsControl ItemsSource="{Binding Path=Dealer.Cards, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Image Margin="10" Width="100">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding ImgUrl}" />
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Winner Name -->
+        <TextBlock Text="Winner:" Grid.Column="1" Grid.Row="1" FontSize="30" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Winner.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" TextAlignment="Center" FontSize="30" HorizontalAlignment="Center"/>
+        
+        <!-- Your Bet -->
+        <TextBlock Text="Your Bet:" Grid.Column="1" Grid.Row="2" FontSize="30" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Player.Bet, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" TextAlignment="Center" FontSize="30" HorizontalAlignment="Center"/>
+
+        <!-- Before Money -->
+        <TextBlock Text="Before Money:" Grid.Column="1" Grid.Row="3" FontSize="30" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding BeforeMoney, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" TextAlignment="Center" FontSize="30" HorizontalAlignment="Center"/>
+        
+        <!-- Current Money -->
+        <TextBlock Text="Money:" Grid.Column="1" Grid.Row="4" FontSize="30" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Player.Money, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" TextAlignment="Center" FontSize="30" HorizontalAlignment="Center"/>
+        
+        <!-- Player Cards -->
+        <ItemsControl ItemsSource="{Binding Path=Player.Cards, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="5">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Image Width="100" Margin="10">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding ImgUrl}" />
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <!-- Restart Button -->
+        <Button Command="{Binding GoAgainCommand}" IsEnabled="{Binding NoMoney, UpdateSourceTrigger=PropertyChanged}" Content="Go Again" Grid.Column="3" Grid.Row="5" Height="50"/>
+        <Button Command="{Binding ResetCommand}" Content="Reset" Grid.Column="3" Grid.Row="5" Height="50" Margin="0 110 0 0"/>
+
+    </Grid>
+</UserControl>

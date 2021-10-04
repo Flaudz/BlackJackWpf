@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="WpfPrac.Views.StartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfPrac.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200"
+             DataContext="{StaticResource SharedViewModel}">
+    <Grid x:Name="CanvasField" Background="White" Visibility="{Binding LoginVisibility, UpdateSourceTrigger=PropertyChanged}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+        <!-- All cards -->
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="3">
+            
+            <ItemsControl ItemsSource="{Binding Path=Deck.AllCards, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Image Width="190" Margin="10">
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding ImgUrl}" />
+                            </Image.Source>
+                        </Image>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <TextBox x:Name="NameInput" Text="Insert Name Here" FontSize="50" Grid.Column="1" Grid.Row="1" TextAlignment="Center" Background="White" BorderBrush="Black" BorderThickness="2" Foreground="DarkSlateGray" Padding="5"/>
+        <Button Grid.Column="1" Grid.Row="2" Content="Change name" Command="{Binding LoginCommand, Source={StaticResource SharedViewModel}}" CommandParameter="{Binding Text, ElementName=NameInput}" FontSize="45" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="CornflowerBlue" Foreground="White" BorderBrush="DarkGray" BorderThickness="2"/>
+
+    </Grid>
+</UserControl>
