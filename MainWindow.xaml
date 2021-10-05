@@ -15,5 +15,7 @@
         <views:InsertBetView Grid.Column="0"/>
         <views:GameView Grid.Column="0"/>
         <views:WinnerView Grid.Column="0"/>
+        <views:SplitView Grid.Column="0"/>
+        <views:SplitWinnerView Grid.Column="0"/>
     </Grid>
 </Window>

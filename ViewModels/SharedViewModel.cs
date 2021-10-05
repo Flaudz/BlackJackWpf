@@ -30,6 +30,9 @@ namespace WpfPrac.ViewModels
         private GoAgainCommand goAgainCommand;
         private ResetCommand resetCommand;
         private DoubbleDownCommand doubbleDownCommand;
+        private SplitCommand splitCommand;
+        private HandHitCommand handHitCommand;
+        private SplitStayCommand splitStayCommand;
 
         // Visibility
         private string loginVisibility = "Visible";
@@ -38,6 +41,8 @@ namespace WpfPrac.ViewModels
         private string dealerTempCardVisibility = "Visible";
         private string showWinner = "Hidden";
         private string doubbleDown = "Hidden";
+        private string splitVisibility = "Hidden";
+        private string splitWinnerVisibility = "Hidden";
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -113,6 +118,26 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+        public string SplitVisibility { get => splitVisibility;
+            set
+            {
+                if (splitVisibility != value)
+                {
+                    splitVisibility = value;
+                    RaisePropertyChanged("SplitVisibility");
+                }
+            }
+        }
+        public string SplitWinnerVisibility { get => splitWinnerVisibility;
+            set
+            {
+                if (splitWinnerVisibility != value)
+                {
+                    splitWinnerVisibility = value;
+                    RaisePropertyChanged("SplitWinnerVisibility");
+                }
+            }
+        }
 
         public string HaveAWinner { get => haveAWinner;
             set
@@ -144,6 +169,9 @@ namespace WpfPrac.ViewModels
         public GoAgainCommand GoAgainCommand { get => goAgainCommand; set => goAgainCommand = value; }
         public ResetCommand ResetCommand { get => resetCommand; set => resetCommand = value; }
         public DoubbleDownCommand DoubbleDownCommand { get => doubbleDownCommand; set => doubbleDownCommand = value; }
+        public SplitCommand SplitCommand { get => splitCommand; set => splitCommand = value; }
+        public HandHitCommand HandHitCommand { get => handHitCommand; set => handHitCommand = value; }
+        public SplitStayCommand SplitStayCommand { get => splitStayCommand; set => splitStayCommand = value; }
 
         public string NoMoney { get => noMoney;
             set
@@ -169,9 +197,6 @@ namespace WpfPrac.ViewModels
 
 
 
-
-
-
         // Constructor
         public SharedViewModel()
         {
@@ -182,6 +207,9 @@ namespace WpfPrac.ViewModels
             this.GoAgainCommand = new GoAgainCommand(this);
             this.ResetCommand = new ResetCommand(this);
             this.DoubbleDownCommand = new DoubbleDownCommand(this);
+            this.SplitCommand = new SplitCommand(this);
+            this.HandHitCommand = new HandHitCommand(this);
+            this.SplitStayCommand = new SplitStayCommand(this);
         }
 
         // Early Game
@@ -235,6 +263,7 @@ namespace WpfPrac.ViewModels
                 else
                 {
                     DealersTurn();
+                    CheckWinner();
                 }
             }
             else if(choice == "no")
@@ -245,6 +274,21 @@ namespace WpfPrac.ViewModels
 
 
         // Mid Game
+
+        public void Split()
+        {
+            Player.Hand1.StartCard(Player);
+            Player.Hand1.AddCardFromDeck(Deck);
+
+            Player.Money -= Player.Bet;
+
+            Player.Hand2.StartCard(Player);
+            Player.Hand2.AddCardFromDeck(Deck);
+
+
+            SplitVisibility = ChangeVisibility();
+        }
+
         public void Hit()
         {
             Player.AddCard(Deck);
@@ -262,6 +306,7 @@ namespace WpfPrac.ViewModels
         {
             DealerTempCardVisibility = "Visible";
             DealersTurn();
+            CheckWinner();
         }
 
 
@@ -277,7 +322,6 @@ namespace WpfPrac.ViewModels
                 }
             }
             Count = Deck.PlayDeck.Count;
-            CheckWinner();
         }
 
         private void CheckWinner()
@@ -349,6 +393,8 @@ namespace WpfPrac.ViewModels
 
         public string ChangeVisibility()
         {
+            SplitWinnerVisibility = "Hidden";
+            SplitVisibility = "Hidden";
             LoginVisibility = "Hidden";
             GameVisibility = "Hidden";
             BetVisibility = "Hidden";
@@ -367,8 +413,11 @@ namespace WpfPrac.ViewModels
             Player.Bet = 0;
             Player.Value = 0;
             Player.Insurance = 0;
-            Player.Hand1 = new Hand();
-            Player.Hand2 = new Hand();
+            Player.Hand1.Cards.Clear();
+            player.Hand1.Bet = 0;
+            Player.Hand2.Cards.Clear();
+            Player.Hand2.Bet = 0;
+            
             Player.Cards.Clear();
 
             Dealer.Bet = 0;
@@ -421,6 +470,110 @@ namespace WpfPrac.ViewModels
                 {
                     CheckWinner();
                 }
+            }
+        }
+
+
+        // Split Game
+        public void SplitHit(string input)
+        {
+            if (input.Contains("Hand1"))
+            {
+                if(Player.Hand1.Value < 22)
+                {
+                    Player.Hand1.AddCardFromDeck(Deck);
+                }
+            }
+            else if (input.Contains("Hand2"))
+            {
+                if(Player.Hand2.Value < 22)
+                {
+                    Player.Hand2.AddCardFromDeck(Deck);
+                }
+                else
+                {
+                    SplitStay(input);
+                }
+            }
+        }
+
+        public void SplitStay(string input)
+        {
+            if (input.Contains("Hand2"))
+            {
+                SplitResult();
+            }
+        }
+
+        protected void SplitResult()
+        {
+            DealersTurn();
+            List<Hand> hands = new();
+            hands.Add(Player.Hand1);
+            hands.Add(Player.Hand2);
+
+            foreach (Hand hand in hands)
+            {
+                if (hand.Value > 21 || Dealer.Value > 21)
+                {
+                    if (hand.Value > 21)
+                    {
+                        // hand Bustede - Dealer vinder
+                        Winner.Name = Dealer.Name;
+                    }
+                    if (Dealer.Value > 21)
+                    {
+                        // Dealer Bustede - hand vinder
+                        Winner.Name = Player.Name;
+                        Player.Money += hand.Bet * 2;
+                    }
+                }
+                else
+                {
+                    if (hand.CheckBlackJack() || Dealer.CheckBlackJack())
+                    {
+                        if (Dealer.CheckBlackJack() && hand.CheckBlackJack())
+                        {
+                            Winner.Name = Dealer.Name;
+                        }
+                        else
+                        {
+                            if (hand.CheckBlackJack())
+                            {
+                                Winner.Name = Player.Name;
+                                Player.Money += Convert.ToInt32(Math.Ceiling(hand.Bet * 2.5));
+                            }
+
+                            if (Dealer.CheckBlackJack())
+                            {
+                                Winner.Name = Dealer.Name;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Dealer.Value > hand.Value)
+                        {
+                            // Dealer Vinder
+                            Winner.Name = Dealer.Name;
+                        }
+                        if (Dealer.Value < hand.Value)
+                        {
+                            // hand vinder
+                            Winner.Name = Player.Name;
+                            Player.Money += hand.Bet * 2;
+                        }
+                        else if (Dealer.Value == hand.Value)
+                        {
+                            Winner.Name = $"{Player.Name} + {Dealer.Name}";
+                            Player.Money += hand.Bet;
+                        }
+                    }
+                }
+                hand.Value = 0;
+                
+                HaveAWinner = "false";
+                SplitWinnerVisibility = ChangeVisibility();
             }
         }
 
