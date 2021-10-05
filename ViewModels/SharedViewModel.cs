@@ -338,6 +338,7 @@ namespace WpfPrac.ViewModels
                     }
                 }
             }
+            Player.Value = 0;
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
             if(Player.Money < 1)
