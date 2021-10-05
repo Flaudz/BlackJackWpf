@@ -12,7 +12,6 @@ namespace WpfPrac.ViewModels
 {
     public class SharedViewModel : CommandViewModel
     {
-
         // Fields
         private Player winner = new("Unknown");
         private Deck deck = new();
