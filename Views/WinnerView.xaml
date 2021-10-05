@@ -22,7 +22,7 @@
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding Player.Value}"/>
+        <TextBlock Text="{Binding Count}"/>
 
         <!-- Dealer Cards -->
         <ItemsControl ItemsSource="{Binding Path=Dealer.Cards, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">

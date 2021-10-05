@@ -2,17 +2,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace WpfPrac.Models
 {
-    public class Deck
+    public class Deck : INotifyPropertyChanged
     {
-        public Queue playDeck = new();
+        private Queue<Card> playDeck = new();
         private ObservableCollection<Card> allCards = new();
         public ObservableCollection<Card> AllCards { get => allCards; set => allCards = value; }
+        public Queue<Card> PlayDeck { get => playDeck;
+            set
+            {
+                if (playDeck != value)
+                {
+                    playDeck = value;
+                    RaisePropertyChanged("PlayDeck");
+                }
+            }
+        }
 
         public Deck()
         {
@@ -82,18 +93,47 @@ namespace WpfPrac.Models
 
         public void MakeDeck()
         {
-            this.playDeck = new Queue();
+            this.PlayDeck = new Queue<Card>();
             Random random = new();
             Card[] tempArr = AllCards.OrderBy(x => random.Next()).ToArray();
             foreach (Card item in tempArr)
             {
-                this.playDeck.Enqueue(item);
+                this.PlayDeck.Enqueue(item);
+            }
+        }
+
+        protected void Shuffle()
+        {
+            Card[] checkDeck = this.PlayDeck.ToArray();
+            this.PlayDeck.Clear();
+            Random random = new();
+            Card[] tempArr = AllCards.OrderBy(x => random.Next()).ToArray();
+
+            foreach (Card Card in tempArr)
+            {
+                if (!checkDeck.Contains(Card))
+                {
+                    this.PlayDeck.Enqueue(Card);
+                }
             }
         }
 
         public Card PickCard()
         {
-            return (Card)this.playDeck.Dequeue();
+            if(this.PlayDeck.Count == 0)
+            {
+                this.Shuffle();
+            }
+            return (Card)this.PlayDeck.Dequeue();
+        }
+
+        // Property Changed
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // This fuction is what informors the thing that it is changed
+        private void RaisePropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
     }
 }

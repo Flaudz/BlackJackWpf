@@ -20,6 +20,7 @@ namespace WpfPrac.ViewModels
         private Player player = new("Unknown");
         private Player dealer = new("Dealer");
         private int beforeMoney = 0;
+        private int count;
 
         // Commands
         private LoginCommand loginCommand;
@@ -155,6 +156,17 @@ namespace WpfPrac.ViewModels
             }
         }
 
+        public int Count { get => count;
+            set
+            {
+                if (count != value)
+                {
+                    count = value;
+                    RaisePropertyChanged("Count");
+                }
+            }
+        }
+
 
 
 
@@ -177,6 +189,7 @@ namespace WpfPrac.ViewModels
         {
             Player.Name = name;
             BetVisibility = ChangeVisibility();
+            Deck.MakeDeck();
         }
 
         public void Start(int bet)
@@ -187,10 +200,8 @@ namespace WpfPrac.ViewModels
                 if (Player.Money >= Player.Bet)
                     DoubbleDownVisibility = "Visible";
                 GameVisibility = ChangeVisibility();
-                // Give starter card
-                Deck.MakeDeck();
 
-                // Start Deal
+                // Give starter card
                 StartDeal();
             }
         }
@@ -206,6 +217,8 @@ namespace WpfPrac.ViewModels
             DealerTempCard = Deck.PickCard();
 
             Player.AddCard(Deck);
+
+            Count = Deck.PlayDeck.Count;
         }
 
         public void DoubbleDown(string choice)
@@ -236,8 +249,11 @@ namespace WpfPrac.ViewModels
         {
             Player.AddCard(Deck);
 
+            Count = Deck.PlayDeck.Count;
+
             if(Player.Value > 21)
             {
+                DealDealerTempCard();
                 CheckWinner();
             }
         }
@@ -254,20 +270,13 @@ namespace WpfPrac.ViewModels
         {
             while (Dealer.Value < 17)
             {
-                if (Dealer.Cards.Count == 1)
-                {
-                    Dealer.Cards.Add(DealerTempCard);
-                    Dealer.Value += DealerTempCard.Value;
-                    if (Dealer.CheckBlackJack())
-                    {
-                        CheckWinner();
-                    }
-                }
-                else
+                DealDealerTempCard();
+                if(Dealer.Cards.Count != 1 && Dealer.Value < 17)
                 {
                     Dealer.AddCard(Deck);
                 }
             }
+            Count = Deck.PlayDeck.Count;
             CheckWinner();
         }
 
@@ -399,6 +408,19 @@ namespace WpfPrac.ViewModels
 
 
             LoginVisibility = ChangeVisibility();
+        }
+
+        protected void DealDealerTempCard()
+        {
+            if (Dealer.Cards.Count == 1)
+            {
+                Dealer.Cards.Add(DealerTempCard);
+                Dealer.Value += DealerTempCard.Value;
+                if (Dealer.CheckBlackJack())
+                {
+                    CheckWinner();
+                }
+            }
         }
 
         // Property Changed
