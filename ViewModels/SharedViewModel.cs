@@ -10,7 +10,7 @@ using WpfPrac.ViewModels.Commands;
 
 namespace WpfPrac.ViewModels
 {
-    public class SharedViewModel : INotifyPropertyChanged
+    public class SharedViewModel : VisibilityViewModel
     {
 
         // Fields
@@ -34,15 +34,7 @@ namespace WpfPrac.ViewModels
         private HandHitCommand handHitCommand;
         private SplitStayCommand splitStayCommand;
 
-        // Visibility
-        private string loginVisibility = "Visible";
-        private string betVisibility = "Hidden";
-        private string gameVisibility = "Hidden";
-        private string dealerTempCardVisibility = "Visible";
-        private string showWinner = "Hidden";
-        private string doubbleDown = "Hidden";
-        private string splitVisibility = "Hidden";
-        private string splitWinnerVisibility = "Hidden";
+        
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -64,81 +56,6 @@ namespace WpfPrac.ViewModels
         public Player Dealer { get => dealer; set => dealer = value; }
         public Player Winner { get => winner; set => winner = value; }
 
-
-        // Visibility
-        public string LoginVisibility { get => loginVisibility;
-            set
-            {
-                if (loginVisibility != value)
-                {
-                    loginVisibility = value;
-                    RaisePropertyChanged("LoginVisibility");
-                }
-            }
-        }
-        public string BetVisibility { get => betVisibility;
-            set
-            {
-                if (betVisibility != value)
-                {
-                    betVisibility = value;
-                    RaisePropertyChanged("BetVisibility");
-                }
-            }
-        }
-        public string GameVisibility { get => gameVisibility;
-            set
-            {
-                if (gameVisibility != value)
-                {
-                    gameVisibility = value;
-                    RaisePropertyChanged("GameVisibility");
-                }
-            }
-        }
-        public string ShowWinner { get => showWinner;
-            set
-            {
-                if (showWinner != value)
-                {
-                    showWinner = value;
-                    RaisePropertyChanged("ShowWinner");
-                }
-            }
-        }
-        public string DealerTempCardVisibility
-        {
-            get => dealerTempCardVisibility;
-            set
-            {
-                if (dealerTempCardVisibility != value)
-                {
-                    dealerTempCardVisibility = value;
-                    RaisePropertyChanged("DealerTempCardVisibility");
-                }
-            }
-        }
-        public string SplitVisibility { get => splitVisibility;
-            set
-            {
-                if (splitVisibility != value)
-                {
-                    splitVisibility = value;
-                    RaisePropertyChanged("SplitVisibility");
-                }
-            }
-        }
-        public string SplitWinnerVisibility { get => splitWinnerVisibility;
-            set
-            {
-                if (splitWinnerVisibility != value)
-                {
-                    splitWinnerVisibility = value;
-                    RaisePropertyChanged("SplitWinnerVisibility");
-                }
-            }
-        }
-
         public string HaveAWinner { get => haveAWinner;
             set
             {
@@ -146,16 +63,6 @@ namespace WpfPrac.ViewModels
                 {
                     haveAWinner = value;
                     RaisePropertyChanged("HaveAWinner");
-                }
-            }
-        }
-        public string DoubbleDownVisibility { get => doubbleDown;
-            set
-            {
-                if (doubbleDown != value)
-                {
-                    doubbleDown = value;
-                    RaisePropertyChanged("DoubbleDownVisibility");
                 }
             }
         }
@@ -391,18 +298,7 @@ namespace WpfPrac.ViewModels
             }
         }
 
-        public string ChangeVisibility()
-        {
-            SplitWinnerVisibility = "Hidden";
-            SplitVisibility = "Hidden";
-            LoginVisibility = "Hidden";
-            GameVisibility = "Hidden";
-            BetVisibility = "Hidden";
-            ShowWinner = "Hidden";
-
-            return "Visible";
-
-        }
+        
 
         // MiniReset will reset the bet, value, cards and insurance so player can start a new round
         public void MiniReset()
@@ -575,15 +471,6 @@ namespace WpfPrac.ViewModels
                 HaveAWinner = "false";
                 SplitWinnerVisibility = ChangeVisibility();
             }
-        }
-
-        // Property Changed
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // This fuction is what informors the thing that it is changed
-        private void RaisePropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
     }
 }
