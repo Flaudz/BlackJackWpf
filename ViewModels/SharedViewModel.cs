@@ -10,7 +10,7 @@ using WpfPrac.ViewModels.Commands;
 
 namespace WpfPrac.ViewModels
 {
-    public class SharedViewModel : VisibilityViewModel
+    public class SharedViewModel : CommandViewModel
     {
 
         // Fields
@@ -21,20 +21,6 @@ namespace WpfPrac.ViewModels
         private Player dealer = new("Dealer");
         private int beforeMoney = 0;
         private int count;
-
-        // Commands
-        private LoginCommand loginCommand;
-        private StartGameCommand startGameCommand;
-        private HitCommand hitCommand;
-        private StayCommand stayCommand;
-        private GoAgainCommand goAgainCommand;
-        private ResetCommand resetCommand;
-        private DoubbleDownCommand doubbleDownCommand;
-        private SplitCommand splitCommand;
-        private HandHitCommand handHitCommand;
-        private SplitStayCommand splitStayCommand;
-
-        
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -67,19 +53,6 @@ namespace WpfPrac.ViewModels
             }
         }
 
-
-        // Commands
-        public LoginCommand LoginCommand { get => loginCommand; set => loginCommand = value; }
-        public StartGameCommand StartGameCommand { get => startGameCommand; set => startGameCommand = value; }
-        public HitCommand HitCommand { get => hitCommand; set => hitCommand = value; }
-        public StayCommand StayCommand { get => stayCommand; set => stayCommand = value; }
-        public GoAgainCommand GoAgainCommand { get => goAgainCommand; set => goAgainCommand = value; }
-        public ResetCommand ResetCommand { get => resetCommand; set => resetCommand = value; }
-        public DoubbleDownCommand DoubbleDownCommand { get => doubbleDownCommand; set => doubbleDownCommand = value; }
-        public SplitCommand SplitCommand { get => splitCommand; set => splitCommand = value; }
-        public HandHitCommand HandHitCommand { get => handHitCommand; set => handHitCommand = value; }
-        public SplitStayCommand SplitStayCommand { get => splitStayCommand; set => splitStayCommand = value; }
-
         public string NoMoney { get => noMoney;
             set
             {
@@ -101,7 +74,6 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
-
 
 
         // Constructor
