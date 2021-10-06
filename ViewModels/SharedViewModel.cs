@@ -23,6 +23,7 @@ namespace WpfPrac.ViewModels
 
         private string haveAWinner = "true";
         private string noMoney = "true";
+        private string canSplit = "false";
 
         public int BeforeMoney { get => beforeMoney;
             set
@@ -62,6 +63,16 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+        public string CanSplit { get => canSplit;
+            set
+            {
+                if (canSplit != value)
+                {
+                    canSplit = value;
+                    RaisePropertyChanged("CanSplit");
+                }
+            }
+        }
 
         public int Count { get => count;
             set
@@ -73,6 +84,7 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+
 
 
         // Constructor
@@ -123,6 +135,9 @@ namespace WpfPrac.ViewModels
             DealerTempCard = Deck.PickCard();
 
             Player.AddCard(Deck);
+
+            if (Player.Cards[0].Value == Player.Cards[1].Value)
+                CanSplit = "True";
 
             Count = Deck.PlayDeck.Count;
         }
@@ -309,8 +324,10 @@ namespace WpfPrac.ViewModels
             Player.Bet = 0;
             Player.Value = 0;
             Player.Insurance = 0;
-            Player.Hand1 = new Hand();
-            Player.Hand2 = new Hand();
+            Player.Hand1.Cards.Clear();
+            player.Hand1.Bet = 0;
+            Player.Hand2.Cards.Clear();
+            Player.Hand2.Bet = 0;
             Player.Cards.Clear();
 
             Dealer.Money = 250;
