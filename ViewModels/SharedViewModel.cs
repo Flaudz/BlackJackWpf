@@ -419,5 +419,25 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+
+        public void BotSetBet()
+        {
+            if(RealCount > -2 && RealCount < 2)
+            {
+                Player.SetBet(5);
+            }
+            else if(RealCount < -1)
+            {
+                Player.SetBet(1);
+            }
+            else if(RealCount > 1 && RealCount < 6)
+            {
+                Player.SetBet(10);
+            }
+            else if(RealCount > 5)
+            {
+                Player.SetBet(20);
+            }
+        }
     }
 }
