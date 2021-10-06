@@ -8,14 +8,14 @@ using System.Windows.Input;
 
 namespace WpfPrac.ViewModels.Commands
 {
-    public class StartGameCommand : ICommand
+    public class HandHitCommand : ICommand
     {
-        private SharedViewModel SharedViewModel;
+        protected SharedViewModel SharedViewModel;
         public event EventHandler CanExecuteChanged;
 
-        public StartGameCommand(SharedViewModel viewmodel)
+        public HandHitCommand(SharedViewModel viewModel)
         {
-            SharedViewModel = viewmodel;
+            SharedViewModel = viewModel;
         }
 
         public bool CanExecute(object parameter)
@@ -25,15 +25,15 @@ namespace WpfPrac.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            try
+
+            if (parameter.ToString().Contains("hit"))
             {
-                SharedViewModel.Start(Int32.Parse(parameter.ToString()));
+                SharedViewModel.SplitHit(parameter.ToString());
             }
-            catch(Exception e)
+            else if (parameter.ToString().Contains("stay"))
             {
-                Debug.WriteLine(e.Message);
+                // Stay
             }
-            
         }
     }
 }
