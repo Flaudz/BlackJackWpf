@@ -14,7 +14,16 @@ namespace WpfPrac.ViewModels
     {
         private int realCount = 0;
 
-        public int RealCount { get => realCount; set => realCount = value; }
+        public int RealCount { get => realCount;
+            set
+            {
+                if (realCount != value)
+                {
+                    realCount = value;
+                    RaisePropertyChanged("RealCount");
+                }
+            }
+        }
 
         // Constructor
         public SharedViewModel()
@@ -30,14 +39,18 @@ namespace WpfPrac.ViewModels
             this.HandHitCommand = new HandHitCommand(this);
             this.SplitStayCommand = new SplitStayCommand(this);
             this.EnableBotCommand = new EnableBotCommand(this);
+            this.BotGoAgainCommand = new BotGoAgainCommand(this);
         }
 
         // Early Game
         public void SetName(string name)
         {
+            MiniReset();
             if (EnabledBot)
             {
-
+                Player.Name = name;
+                Deck.MakeDeck();
+                BotSetBet();
             }
             else
             {
@@ -150,6 +163,7 @@ namespace WpfPrac.ViewModels
                     Dealer.AddCard(Deck);
                 }
             }
+            MakeCountFromRound();
             Count = Deck.PlayDeck.Count;
         }
 
@@ -198,7 +212,7 @@ namespace WpfPrac.ViewModels
                         // Dealer Vinder
                         Winner.Name = Dealer.Name;
                     }
-                    if(Dealer.Value < Player.Value)
+                    else if(Dealer.Value < Player.Value)
                     {
                         // Player vinder
                         Winner.Name = Player.Name;
@@ -214,6 +228,7 @@ namespace WpfPrac.ViewModels
             Player.Value = 0;
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
+
             if(Player.Money < 1)
             {
                 NoMoney = "false";
@@ -290,7 +305,6 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
-
 
         // Split Game
         public void SplitHit(string input)
@@ -418,6 +432,17 @@ namespace WpfPrac.ViewModels
                     RealCount--;
                 }
             }
+            foreach (Card card in Dealer.Cards)
+            {
+                if (card.Value < 7 && card.Value != 1)
+                {
+                    RealCount++;
+                }
+                else if (card.Value > 9 || card.Value == 1)
+                {
+                    RealCount--;
+                }
+            }
         }
 
         public void BotSetBet()
@@ -437,6 +462,63 @@ namespace WpfPrac.ViewModels
             else if(RealCount > 5)
             {
                 Player.SetBet(20);
+            }
+            StartDeal();
+            BotStayOrHit();
+        }
+
+        public void BotStayOrHit()
+        {
+            int number;
+            bool stillGoing = true;
+            while(Player.Value < 22 && stillGoing)
+            {
+                if(Player.Value < 12)
+                {
+                    Hit();
+                    FixZeroError();
+                }
+
+                if(Dealer.Value < 7)
+                {
+                    if(Player.Value < 12)
+                    {
+                        Hit();
+                        FixZeroError();
+                    }
+                    else
+                    {
+                        stillGoing = false;
+                        Stay();
+
+                    }
+                }
+                else if(Dealer.Value > 6)
+                {
+                    if(Player.Value < 17)
+                    {
+                        Hit();
+                        FixZeroError();
+                    }
+                    else
+                    {
+                        stillGoing = false;
+                        Stay();
+                    }
+                }
+            }
+
+            stillGoing = true;
+        }
+
+        protected void FixZeroError()
+        {
+            if(Player.Value == 0)
+            {
+                foreach (Card card in Player.Cards)
+                {
+                    Player.Value += card.Value;
+                }
             }
         }
     }

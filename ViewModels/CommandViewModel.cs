@@ -21,6 +21,7 @@ namespace WpfPrac.ViewModels
         private HandHitCommand handHitCommand;
         private SplitStayCommand splitStayCommand;
         private EnableBotCommand enableBotCommand;
+        private BotGoAgainCommand botGoAgainCommand;
 
         // Commands
         public LoginCommand LoginCommand { get => loginCommand; set => loginCommand = value; }
@@ -34,5 +35,6 @@ namespace WpfPrac.ViewModels
         public HandHitCommand HandHitCommand { get => handHitCommand; set => handHitCommand = value; }
         public SplitStayCommand SplitStayCommand { get => splitStayCommand; set => splitStayCommand = value; }
         public EnableBotCommand EnableBotCommand { get => enableBotCommand; set => enableBotCommand = value; }
+        public BotGoAgainCommand BotGoAgainCommand { get => botGoAgainCommand; set => botGoAgainCommand = value; }
     }
 }
