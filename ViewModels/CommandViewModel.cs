@@ -20,6 +20,7 @@ namespace WpfPrac.ViewModels
         private SplitCommand splitCommand;
         private HandHitCommand handHitCommand;
         private SplitStayCommand splitStayCommand;
+        private EnableBotCommand enableBotCommand;
 
         // Commands
         public LoginCommand LoginCommand { get => loginCommand; set => loginCommand = value; }
@@ -32,6 +33,6 @@ namespace WpfPrac.ViewModels
         public SplitCommand SplitCommand { get => splitCommand; set => splitCommand = value; }
         public HandHitCommand HandHitCommand { get => handHitCommand; set => handHitCommand = value; }
         public SplitStayCommand SplitStayCommand { get => splitStayCommand; set => splitStayCommand = value; }
-
+        public EnableBotCommand EnableBotCommand { get => enableBotCommand; set => enableBotCommand = value; }
     }
 }

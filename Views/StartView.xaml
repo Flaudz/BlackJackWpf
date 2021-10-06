@@ -43,6 +43,7 @@
 
         <TextBox x:Name="NameInput" Text="Insert Name Here" FontSize="50" Grid.Column="1" Grid.Row="1" TextAlignment="Center" Background="White" BorderBrush="Black" BorderThickness="2" Foreground="DarkSlateGray" Padding="5"/>
         <Button Grid.Column="1" Grid.Row="2" Content="Change name" Command="{Binding LoginCommand, Source={StaticResource SharedViewModel}}" CommandParameter="{Binding Text, ElementName=NameInput}" FontSize="45" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="CornflowerBlue" Foreground="White" BorderBrush="DarkGray" BorderThickness="2"/>
+        <Button Command="{Binding EnableBotCommand, Source={StaticResource SharedViewModel}}" Content="Enable Bot" Background="Black" Foreground="White" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" Padding="25"/>
 
     </Grid>
 </UserControl>

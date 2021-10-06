@@ -12,80 +12,9 @@ namespace WpfPrac.ViewModels
 {
     public class SharedViewModel : CommandViewModel
     {
-        // Fields
-        private Player winner = new("Unknown");
-        private Deck deck = new();
-        private Card card, dealerTempCard;
-        private Player player = new("Unknown");
-        private Player dealer = new("Dealer");
-        private int beforeMoney = 0;
-        private int count;
+        private int realCount = 0;
 
-        private string haveAWinner = "true";
-        private string noMoney = "true";
-        private string canSplit = "false";
-
-        public int BeforeMoney { get => beforeMoney;
-            set
-            {
-                if (beforeMoney != value)
-                {
-                    beforeMoney = value;
-                    RaisePropertyChanged("BeforeMoney");
-                }
-            }
-        }
-        public Deck Deck { get => deck; set => deck = value; }
-        public Card Card { get => card; set => card = value; }
-        public Card DealerTempCard { get => dealerTempCard; set => dealerTempCard = value; }
-        public Player Player { get => player; set => player = value; }
-        public Player Dealer { get => dealer; set => dealer = value; }
-        public Player Winner { get => winner; set => winner = value; }
-
-        public string HaveAWinner { get => haveAWinner;
-            set
-            {
-                if (haveAWinner != value)
-                {
-                    haveAWinner = value;
-                    RaisePropertyChanged("HaveAWinner");
-                }
-            }
-        }
-
-        public string NoMoney { get => noMoney;
-            set
-            {
-                if (noMoney != value)
-                {
-                    noMoney = value;
-                    RaisePropertyChanged("NoMoney");
-                }
-            }
-        }
-        public string CanSplit { get => canSplit;
-            set
-            {
-                if (canSplit != value)
-                {
-                    canSplit = value;
-                    RaisePropertyChanged("CanSplit");
-                }
-            }
-        }
-
-        public int Count { get => count;
-            set
-            {
-                if (count != value)
-                {
-                    count = value;
-                    RaisePropertyChanged("Count");
-                }
-            }
-        }
-
-
+        public int RealCount { get => realCount; set => realCount = value; }
 
         // Constructor
         public SharedViewModel()
@@ -100,14 +29,22 @@ namespace WpfPrac.ViewModels
             this.SplitCommand = new SplitCommand(this);
             this.HandHitCommand = new HandHitCommand(this);
             this.SplitStayCommand = new SplitStayCommand(this);
+            this.EnableBotCommand = new EnableBotCommand(this);
         }
 
         // Early Game
         public void SetName(string name)
         {
-            Player.Name = name;
-            BetVisibility = ChangeVisibility();
-            Deck.MakeDeck();
+            if (EnabledBot)
+            {
+
+            }
+            else
+            {
+                Player.Name = name;
+                BetVisibility = ChangeVisibility();
+                Deck.MakeDeck();
+            }
         }
 
         public void Start(int bet)
@@ -167,7 +104,6 @@ namespace WpfPrac.ViewModels
 
 
         // Mid Game
-
         public void Split()
         {
             Player.Hand1.StartCard(Player);
@@ -282,9 +218,7 @@ namespace WpfPrac.ViewModels
             {
                 NoMoney = "false";
             }
-        }
-
-        
+        } 
 
         // MiniReset will reset the bet, value, cards and insurance so player can start a new round
         public void MiniReset()
@@ -296,7 +230,7 @@ namespace WpfPrac.ViewModels
             Player.Value = 0;
             Player.Insurance = 0;
             Player.Hand1.Cards.Clear();
-            player.Hand1.Bet = 0;
+            Player.Hand1.Bet = 0;
             Player.Hand2.Cards.Clear();
             Player.Hand2.Bet = 0;
             
@@ -325,7 +259,7 @@ namespace WpfPrac.ViewModels
             Player.Value = 0;
             Player.Insurance = 0;
             Player.Hand1.Cards.Clear();
-            player.Hand1.Bet = 0;
+            Player.Hand1.Bet = 0;
             Player.Hand2.Cards.Clear();
             Player.Hand2.Bet = 0;
             Player.Cards.Clear();
@@ -458,6 +392,31 @@ namespace WpfPrac.ViewModels
                 
                 HaveAWinner = "false";
                 SplitWinnerVisibility = ChangeVisibility();
+            }
+        }
+
+
+        // Card Counting Bot
+        public void EnableBot()
+        {
+            if (EnabledBot)
+                EnabledBot = false;
+            else
+                EnabledBot = true;
+        }
+
+        protected void MakeCountFromRound()
+        {
+            foreach (Card card in Player.Cards)
+            {
+                if(card.Value < 7 && card.Value != 1)
+                {
+                    RealCount++;
+                }
+                else if(card.Value > 9 || card.Value == 1)
+                {
+                    RealCount--;
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WpfPrac.ViewModels
 {
-    public class VisibilityViewModel : INotifyPropertyChanged
+    public class VisibilityViewModel : FieldViewModel
     {
             // Visibility
         private string loginVisibility = "Visible";
@@ -114,15 +114,7 @@ namespace WpfPrac.ViewModels
 
             return "Visible";
         }
-            // Property Changed
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            // This fuction is what informors the thing that it is changed
-            public void RaisePropertyChanged(string property)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-            }
-        }
-
     }
+
+}
 
