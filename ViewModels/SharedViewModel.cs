@@ -50,6 +50,8 @@ namespace WpfPrac.ViewModels
             {
                 Player.Name = name;
                 Deck.MakeDeck();
+                if (Deck.PlayDeck.Count == 52)
+                    RealCount = 0;
                 BotSetBet();
             }
             else
@@ -469,7 +471,6 @@ namespace WpfPrac.ViewModels
 
         public void BotStayOrHit()
         {
-            int number;
             bool stillGoing = true;
             while(Player.Value < 22 && stillGoing)
             {
@@ -495,7 +496,7 @@ namespace WpfPrac.ViewModels
                 }
                 else if(Dealer.Value > 6)
                 {
-                    if(Player.Value < 17)
+                    if(Player.Value < 17 && RealCount < 1)
                     {
                         Hit();
                         FixZeroError();
