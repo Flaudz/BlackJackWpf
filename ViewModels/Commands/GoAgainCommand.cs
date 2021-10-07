@@ -25,6 +25,7 @@ namespace WpfPrac.ViewModels.Commands
 
         public void Execute(object parameter)
         {
+            SharedViewModel.EnabledBot = false;
             SharedViewModel.MiniReset();
         }
     }
