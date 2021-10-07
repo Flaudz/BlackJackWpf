@@ -74,6 +74,7 @@ namespace WpfPrac.Models
             Cards.Add(card);
             Value += card.Value;
             this.CheckAce();
+            RaisePropertyChanged("Cards");
         }
 
         // Check for ace in hand

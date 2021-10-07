@@ -94,7 +94,7 @@ namespace WpfPrac.ViewModels
             Count = Deck.PlayDeck.Count;
         }
 
-        public void DoubbleDown(string choice)
+        public async Task DoubbleDown(string choice)
         {
             if(choice == "yes")
             {
@@ -107,7 +107,7 @@ namespace WpfPrac.ViewModels
                 }
                 else
                 {
-                    DealersTurn();
+                    await DealersTurn();
                     CheckWinner();
                 }
             }
@@ -137,6 +137,7 @@ namespace WpfPrac.ViewModels
         {
             Player.AddCard(Deck);
 
+
             Count = Deck.PlayDeck.Count;
 
             if(Player.Value > 21)
@@ -146,24 +147,26 @@ namespace WpfPrac.ViewModels
             }
         }
 
-        public void Stay()
+        public async Task Stay()
         {
             DealerTempCardVisibility = "Visible";
-            DealersTurn();
+            await DealersTurn();
             CheckWinner();
         }
 
 
         // Late Game
-        private void DealersTurn()
+        private async Task DealersTurn()
         {
             while (Dealer.Value < 17)
             {
-                DealDealerTempCard();
-                if(Dealer.Cards.Count != 1 && Dealer.Value < 17)
+                await DealDealerTempCard();
+                if (Dealer.Cards.Count != 1 && Dealer.Value < 17)
                 {
                     Dealer.AddCard(Deck);
                 }
+                if(!EnabledBot)
+                    await Task.Delay(1000);
             }
             MakeCountFromRound();
             Count = Deck.PlayDeck.Count;
@@ -295,7 +298,7 @@ namespace WpfPrac.ViewModels
             LoginVisibility = ChangeVisibility();
         }
 
-        protected void DealDealerTempCard()
+        protected async Task DealDealerTempCard()
         {
             if (Dealer.Cards.Count == 1)
             {
@@ -305,6 +308,8 @@ namespace WpfPrac.ViewModels
                 {
                     CheckWinner();
                 }
+                if(!EnabledBot)
+                    await Task.Delay(500);
             }
         }
 
@@ -339,9 +344,9 @@ namespace WpfPrac.ViewModels
             }
         }
 
-        protected void SplitResult()
+        protected async Task SplitResult()
         {
-            DealersTurn();
+            await DealersTurn();
             List<Hand> hands = new();
             hands.Add(Player.Hand1);
             hands.Add(Player.Hand2);
@@ -451,7 +456,7 @@ namespace WpfPrac.ViewModels
         {
             if(RealCount > -2 && RealCount < 2)
             {
-                Player.SetBet(5);
+                Player.SetBet(25);
             }
             else if(RealCount < -1)
             {
@@ -459,11 +464,11 @@ namespace WpfPrac.ViewModels
             }
             else if(RealCount > 1 && RealCount < 6)
             {
-                Player.SetBet(10);
+                Player.SetBet(50);
             }
-            else if(RealCount > 5)
+            else if(RealCount > 4)
             {
-                Player.SetBet(20);
+                Player.SetBet(Player.Money);
             }
             StartDeal();
             BotStayOrHit();
@@ -474,37 +479,50 @@ namespace WpfPrac.ViewModels
             bool stillGoing = true;
             while(Player.Value < 22 && stillGoing)
             {
-                if(Player.Value < 12)
+                if(Player.Money > Player.Bet+1 && RealCount > -1 && Player.Value == 11)
                 {
-                    Hit();
-                    FixZeroError();
+                    stillGoing = false;
+                    DoubbleDown("yes");
                 }
-
-                if(Dealer.Value < 7)
+                else
                 {
                     if(Player.Value < 12)
                     {
                         Hit();
                         FixZeroError();
                     }
-                    else
-                    {
-                        stillGoing = false;
-                        Stay();
 
-                    }
-                }
-                else if(Dealer.Value > 6)
-                {
-                    if(Player.Value < 17 && RealCount < 1)
+                    if(Dealer.Value < 7)
                     {
-                        Hit();
-                        FixZeroError();
+                        if(Player.Value < 12)
+                        {
+                            Hit();
+                            FixZeroError();
+                        }
+                        else
+                        {
+                            stillGoing = false;
+                            Stay();
+
+                        }
                     }
-                    else
+                    else if(Dealer.Value > 6)
                     {
-                        stillGoing = false;
-                        Stay();
+                        if(Player.Value < 17 && RealCount < -1)
+                        {
+                            Hit();
+                            FixZeroError();
+                        }
+                        else if(Player.Value < 12)
+                        {
+                            Hit();
+                            FixZeroError();
+                        }
+                        else
+                        {
+                            stillGoing = false;
+                            Stay();
+                        }
                     }
                 }
             }

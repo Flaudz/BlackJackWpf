@@ -93,7 +93,7 @@
         </Image>
         
         <!-- Dealer Cards -->
-        <ItemsControl ItemsSource="{Binding Path=Dealer.Cards, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="1">
+        <ItemsControl ItemsSource="{Binding Path=Dealer.Cards, UpdateSourceTrigger=Explicit}" Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
