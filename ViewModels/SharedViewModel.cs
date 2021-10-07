@@ -13,6 +13,7 @@ namespace WpfPrac.ViewModels
     public class SharedViewModel : CommandViewModel
     {
         private int realCount = 0;
+        private bool bothWon = false;
 
         public int RealCount { get => realCount;
             set
@@ -24,6 +25,8 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+
+        public bool BothWon { get => bothWon; set => bothWon = value; }
 
         // Constructor
         public SharedViewModel()
@@ -46,6 +49,7 @@ namespace WpfPrac.ViewModels
         public void SetName(string name)
         {
             MiniReset();
+            RoundNubmer++;
             if (EnabledBot)
             {
                 Player.Name = name;
@@ -230,6 +234,16 @@ namespace WpfPrac.ViewModels
                     }
                 }
             }
+
+            if (Winner.Name == Player.Name)
+                Player.JustWon = true;
+            else if(Winner.Name == Dealer.Name)
+                Player.JustWon = false;
+            else
+            {
+                BothWon = true;
+                Player.JustWon = true;
+            }
             Player.Value = 0;
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
@@ -237,6 +251,16 @@ namespace WpfPrac.ViewModels
             if(Player.Money < 1)
             {
                 NoMoney = "false";
+            }
+
+            Thread.Sleep(5);
+            if(Player.Money > 1600 || Player.Money < 1)
+            {
+
+            }
+            else
+            {
+                SetName(Player.Name);
             }
         } 
 
@@ -254,7 +278,7 @@ namespace WpfPrac.ViewModels
             Player.Hand1.Bet = 0;
             Player.Hand2.Cards.Clear();
             Player.Hand2.Bet = 0;
-            
+
             Player.Cards.Clear();
 
             Dealer.Bet = 0;
@@ -270,6 +294,7 @@ namespace WpfPrac.ViewModels
         // This will reset the player completly so the player can start from a new start.
         public void FullReset()
         {
+            Player.PreviousBet = 0;
             EnabledBot = false;
 
             NoMoney = "true";
@@ -456,21 +481,26 @@ namespace WpfPrac.ViewModels
 
         public void BotSetBet()
         {
-            if(RealCount > -2 && RealCount < 2)
+            if (!BothWon)
             {
-                Player.SetBet(25);
+                if(Player.PreviousBet == 0 || Player.JustWon)
+                {
+                    Player.SetBet(1);
+                }
+                else if(Player.JustWon == false)
+                {
+                    if(Player.PreviousBet*2%2 == 0)
+                        Player.SetBet(Player.PreviousBet * 2);
+                    else
+                    {
+                        Player.SetBet(Player.Money);
+                    }
+                }
             }
-            else if(RealCount < -1)
+            else
             {
-                Player.SetBet(1);
-            }
-            else if(RealCount > 1 && RealCount < 6)
-            {
-                Player.SetBet(50);
-            }
-            else if(RealCount > 4)
-            {
-                Player.SetBet(Player.Money);
+                Player.SetBet(Player.PreviousBet);
+                BothWon = false;
             }
             StartDeal();
             BotStayOrHit();

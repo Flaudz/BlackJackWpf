@@ -22,7 +22,7 @@
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding RealCount, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="{Binding RoundNubmer, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Dealer Cards -->
         <ItemsControl ItemsSource="{Binding Path=Dealer.Cards, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">

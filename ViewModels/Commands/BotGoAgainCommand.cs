@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -25,6 +26,7 @@ namespace WpfPrac.ViewModels.Commands
 
         public void Execute(object parameter)
         {
+            Thread.Sleep(100);
             SharedViewModel.EnabledBot = true;
             SharedViewModel.SetName(SharedViewModel.Player.Name);
         }

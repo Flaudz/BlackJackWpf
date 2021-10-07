@@ -18,6 +18,7 @@ namespace WpfPrac.ViewModels
         private Player dealer = new("Dealer");
         private int beforeMoney = 0;
         private int count;
+        private float roundNubmer = 0;
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -108,9 +109,16 @@ namespace WpfPrac.ViewModels
             }
         }
 
-
-
-
+        public float RoundNubmer { get => roundNubmer;
+            set
+            {
+                if (roundNubmer != value)
+                {
+                    roundNubmer = value;
+                    RaisePropertyChanged("RoundNubmer");
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

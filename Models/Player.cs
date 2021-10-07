@@ -12,7 +12,8 @@ namespace WpfPrac.Models
         private string name;
         private ObservableCollection<Card> cards = new();
         private Hand hand1, hand2 = new();
-        private int value, money, bet, insurance;
+        private int value, money, bet, insurance, previousBet;
+        private bool justWon = false;
 
         // Properties
         public string Name
@@ -53,15 +54,18 @@ namespace WpfPrac.Models
             }
         }
         public int Insurance { get => insurance; set => insurance = value; }
+        public int PreviousBet { get => previousBet; set => previousBet = value; }
+        public bool JustWon { get => justWon; set => justWon = value; }
 
         // Constructor
         public Player(string name)
         {
             Name = name;
             Value = 0;
-            Money = 250;
+            Money = 1250;
             Bet = 0;
             Insurance = 0;
+            PreviousBet = 0;
 
             Hand1 = new Hand();
             Hand2 = new Hand();
@@ -98,6 +102,7 @@ namespace WpfPrac.Models
         {
             this.Bet = bet;
             this.Money -= bet;
+            this.PreviousBet = bet;
         }
 
         public bool CheckBlackJack()
