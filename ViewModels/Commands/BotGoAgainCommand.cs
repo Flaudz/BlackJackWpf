@@ -7,13 +7,13 @@ using System.Windows.Input;
 
 namespace WpfPrac.ViewModels.Commands
 {
-    public class GoAgainCommand : ICommand
+    public class BotGoAgainCommand : ICommand
     {
-        public SharedViewModel SharedViewModel;
+        private SharedViewModel SharedViewModel;
 
         public event EventHandler CanExecuteChanged;
 
-        public GoAgainCommand(SharedViewModel viewModel)
+        public BotGoAgainCommand(SharedViewModel viewModel)
         {
             SharedViewModel = viewModel;
         }
@@ -25,8 +25,8 @@ namespace WpfPrac.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            SharedViewModel.EnabledBot = false;
-            SharedViewModel.MiniReset();
+            SharedViewModel.EnabledBot = true;
+            SharedViewModel.SetName(SharedViewModel.Player.Name);
         }
     }
 }
