@@ -243,6 +243,8 @@ namespace WpfPrac.ViewModels
         // MiniReset will reset the bet, value, cards and insurance so player can start a new round
         public void MiniReset()
         {
+            EnabledBot = false;
+
             HaveAWinner = "true";
             Winner.Name = "Unknown";
 
@@ -417,7 +419,6 @@ namespace WpfPrac.ViewModels
                 SplitWinnerVisibility = ChangeVisibility();
             }
         }
-
 
         // Card Counting Bot
         public void EnableBot()
