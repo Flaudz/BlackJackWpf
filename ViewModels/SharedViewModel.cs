@@ -269,6 +269,8 @@ namespace WpfPrac.ViewModels
         // This will reset the player completly so the player can start from a new start.
         public void FullReset()
         {
+            EnabledBot = false;
+
             NoMoney = "true";
             HaveAWinner = "true";
             Winner.Name = "Unknown";
