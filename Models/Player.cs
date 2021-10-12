@@ -12,7 +12,7 @@ namespace WpfPrac.Models
         private string name;
         private ObservableCollection<Card> cards = new();
         private Hand hand1, hand2 = new();
-        private int value, money, bet, insurance, previousBet;
+        private float value, money, bet, insurance, previousBet;
         private bool justWon = false;
 
         // Properties
@@ -32,8 +32,8 @@ namespace WpfPrac.Models
         public Hand Hand1 { get => hand1; set => hand1 = value; }
         public Hand Hand2 { get => hand2; set => hand2 = value; }
         
-        public int Value { get => value; set => this.value = value; }
-        public int Money { get => money;
+        public float Value { get => value; set => this.value = value; }
+        public float Money { get => money;
             set
             {
                 if (money != value)
@@ -43,7 +43,7 @@ namespace WpfPrac.Models
                 }
             }
         }
-        public int Bet { get => bet;
+        public float Bet { get => bet;
             set
             {
                 if (bet != value)
@@ -53,8 +53,8 @@ namespace WpfPrac.Models
                 }
             }
         }
-        public int Insurance { get => insurance; set => insurance = value; }
-        public int PreviousBet { get => previousBet; set => previousBet = value; }
+        public float Insurance { get => insurance; set => insurance = value; }
+        public float PreviousBet { get => previousBet; set => previousBet = value; }
         public bool JustWon { get => justWon; set => justWon = value; }
 
         // Constructor
@@ -84,21 +84,21 @@ namespace WpfPrac.Models
         // Check for ace in hand
         public void CheckAce()
         {
-            if (this.Value > 21)
+            if (Value > 21)
             {
-                foreach (Card forCard in this.Cards)
+                foreach (Card forCard in Cards)
                 {
                     if (forCard.Value == 11)
                     {
                         forCard.Value = 1;
-                        this.Value -= 10;
+                        Value -= 10;
                         break;
                     }
                 }
             }
         }
 
-        public void SetBet(int bet)
+        public void SetBet(float bet)
         {
             this.Bet = bet;
             this.Money -= bet;
@@ -128,13 +128,13 @@ namespace WpfPrac.Models
     {
         // Fields
         private ObservableCollection<Card> cards = new();
-        private int value, money, bet, insurance;
+        private float value, money, bet, insurance;
 
         // Properties
         public ObservableCollection<Card> Cards { get => cards; set => cards = value; }
 
-        public int Value { get => value; set => this.value = value; }
-        public int Money
+        public float Value { get => value; set => this.value = value; }
+        public float Money
         {
             get => money;
             set
@@ -146,7 +146,7 @@ namespace WpfPrac.Models
                 }
             }
         }
-        public int Bet
+        public float Bet
         {
             get => bet;
             set
@@ -158,7 +158,7 @@ namespace WpfPrac.Models
                 }
             }
         }
-        public int Insurance { get => insurance; set => insurance = value; }
+        public float Insurance { get => insurance; set => insurance = value; }
 
         // Constructor
         public Hand()
@@ -206,7 +206,7 @@ namespace WpfPrac.Models
             }
         }
 
-        public void SetBet(int bet)
+        public void SetBet(float bet)
         {
             this.Bet = bet;
             this.Money -= bet;

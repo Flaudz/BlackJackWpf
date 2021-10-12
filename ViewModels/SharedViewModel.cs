@@ -1,9 +1,8 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
+using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using WpfPrac.Models;
 using WpfPrac.ViewModels.Commands;
@@ -12,19 +11,11 @@ namespace WpfPrac.ViewModels
 {
     public class SharedViewModel : CommandViewModel
     {
-        private int realCount = 0;
         private bool bothWon = false;
+        public List<DataModel> DataModel = new();
 
-        public int RealCount { get => realCount;
-            set
-            {
-                if (realCount != value)
-                {
-                    realCount = value;
-                    RaisePropertyChanged("RealCount");
-                }
-            }
-        }
+        public int PlayerStartValue, DealersStartValue = 0;
+
 
         public bool BothWon { get => bothWon; set => bothWon = value; }
 
@@ -55,7 +46,11 @@ namespace WpfPrac.ViewModels
                 Player.Name = name;
                 Deck.MakeDeck();
                 if (Deck.PlayDeck.Count == 52)
-                    RealCount = 0;
+                {
+                    CountModel.Count = 0;
+                    CountModel.UsedCards.Clear();
+
+                }
                 BotSetBet();
             }
             else
@@ -66,7 +61,7 @@ namespace WpfPrac.ViewModels
             }
         }
 
-        public void Start(int bet)
+        public void Start(float bet)
         {
             if(bet < Player.Money + 1)
             {
@@ -92,8 +87,13 @@ namespace WpfPrac.ViewModels
 
             Player.AddCard(Deck);
 
+            PlayerStartValue = (int)Player.Value;
+            DealersStartValue = (int)Dealer.Value;
+
             if (Player.Cards[0].Value == Player.Cards[1].Value)
                 CanSplit = "True";
+
+            MakeCountFromRound();
 
             Count = Deck.PlayDeck.Count;
         }
@@ -139,15 +139,22 @@ namespace WpfPrac.ViewModels
 
         public void Hit()
         {
+            PlayerStartValue = (int)Player.Value;
+            DealersStartValue = (int)Dealer.Value;
             Player.AddCard(Deck);
-
+            MakeCountFromRound();
 
             Count = Deck.PlayDeck.Count;
 
             if(Player.Value > 21)
             {
+                DataModel.Add(new DataModel() { MyValue = PlayerStartValue, DealersValue = DealersStartValue, HitOr = 10, RealCount = CountModel.Count });
                 DealDealerTempCard();
                 CheckWinner();
+            }
+            else
+            {
+                DataModel.Add(new DataModel() { MyValue = PlayerStartValue, DealersValue = DealersStartValue, HitOr = 100, RealCount = CountModel.Count });
             }
         }
 
@@ -244,6 +251,7 @@ namespace WpfPrac.ViewModels
                 BothWon = true;
                 Player.JustWon = true;
             }
+            RoundNubmer++;
             Player.Value = 0;
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
@@ -253,14 +261,14 @@ namespace WpfPrac.ViewModels
                 NoMoney = "false";
             }
 
-            Thread.Sleep(5);
-            if(Player.Money > 1600 || Player.Money < 1)
+            if(RoundNubmer == 100)
             {
-
+                
             }
             else
             {
-                SetName(Player.Name);
+                if(EnabledBot)
+                    SetName(Player.Name);
             }
         } 
 
@@ -287,6 +295,8 @@ namespace WpfPrac.ViewModels
             Dealer.Hand1 = new Hand();
             Dealer.Hand2 = new Hand();
             Dealer.Cards.Clear();
+
+
 
             BetVisibility = ChangeVisibility();
         }
@@ -321,7 +331,13 @@ namespace WpfPrac.ViewModels
             Dealer.Hand2 = new Hand();
             Dealer.Cards.Clear();
 
+            CountModel = new CountModel();
 
+            using (var writer = new StreamWriter(@"C:\Users\nico936d\Desktop\MyData.csv"))
+            using (var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csvWriter.WriteRecords(DataModel);
+            }
 
             LoginVisibility = ChangeVisibility();
         }
@@ -457,24 +473,40 @@ namespace WpfPrac.ViewModels
         {
             foreach (Card card in Player.Cards)
             {
-                if(card.Value < 7 && card.Value != 1)
+                if(CountModel.UsedCards.Contains(card) == false)
                 {
-                    RealCount++;
-                }
-                else if(card.Value > 9 || card.Value == 1)
-                {
-                    RealCount--;
+
+                    if(card.Value < 7 && card.Value != 1)
+                    {
+                        CountModel.Count++;
+                        CountModel.UsedCards.Add(card);
+                    }
+                    else if(card.Value > 9 || card.Value == 1)
+                    {
+                        CountModel.Count--;
+                        CountModel.UsedCards.Add(card);
+                    }
                 }
             }
             foreach (Card card in Dealer.Cards)
             {
-                if (card.Value < 7 && card.Value != 1)
+                if (CountModel.UsedCards.Contains(card) == false)
                 {
-                    RealCount++;
-                }
-                else if (card.Value > 9 || card.Value == 1)
-                {
-                    RealCount--;
+
+                    if (card.Value < 7 && card.Value != 1)
+                    {
+                        CountModel.Count++;
+                        CountModel.UsedCards.Add(card);
+                    }
+                    else if (card.Value > 9 || card.Value == 1)
+                    {
+                        CountModel.Count--;
+                        CountModel.UsedCards.Add(card);
+                    }
+                    else
+                    {
+                        CountModel.UsedCards.Add(card);
+                    }
                 }
             }
         }
@@ -489,17 +521,17 @@ namespace WpfPrac.ViewModels
                 }
                 else if(Player.JustWon == false)
                 {
-                    if(Player.PreviousBet*2%2 == 0)
+                    if (Player.PreviousBet * 2 % 2 == 0)
                         Player.SetBet(Player.PreviousBet * 2);
                     else
                     {
-                        Player.SetBet(Player.Money);
+                        Player.SetBet(1);
                     }
                 }
             }
             else
             {
-                Player.SetBet(Player.PreviousBet);
+                Player.SetBet(1);
                 BothWon = false;
             }
             StartDeal();
@@ -509,57 +541,15 @@ namespace WpfPrac.ViewModels
         public void BotStayOrHit()
         {
             bool stillGoing = true;
-            while(Player.Value < 22 && stillGoing)
+            while (Player.Value < 22 && stillGoing)
             {
-                if(Player.Money > Player.Bet+1 && RealCount > -1 && Player.Value == 11)
+                Hit();
+                FixZeroError();
+                if(Player.Value > 21)
                 {
                     stillGoing = false;
-                    DoubbleDown("yes");
-                }
-                else
-                {
-                    if(Player.Value < 12)
-                    {
-                        Hit();
-                        FixZeroError();
-                    }
-
-                    if(Dealer.Value < 7)
-                    {
-                        if(Player.Value < 12)
-                        {
-                            Hit();
-                            FixZeroError();
-                        }
-                        else
-                        {
-                            stillGoing = false;
-                            Stay();
-
-                        }
-                    }
-                    else if(Dealer.Value > 6)
-                    {
-                        if(Player.Value < 17 && RealCount < -1)
-                        {
-                            Hit();
-                            FixZeroError();
-                        }
-                        else if(Player.Value < 12)
-                        {
-                            Hit();
-                            FixZeroError();
-                        }
-                        else
-                        {
-                            stillGoing = false;
-                            Stay();
-                        }
-                    }
                 }
             }
-
-            stillGoing = true;
         }
 
         protected void FixZeroError()

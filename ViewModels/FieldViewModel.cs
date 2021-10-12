@@ -16,9 +16,11 @@ namespace WpfPrac.ViewModels
         private Card card, dealerTempCard;
         private Player player = new("Unknown");
         private Player dealer = new("Dealer");
-        private int beforeMoney = 0;
+        private float beforeMoney = 0;
         private int count;
         private float roundNubmer = 0;
+
+        private CountModel countModel = new();
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -26,7 +28,7 @@ namespace WpfPrac.ViewModels
 
         private bool enabledBot = false;
 
-        public int BeforeMoney
+        public float BeforeMoney
         {
             get => beforeMoney;
             set
@@ -70,6 +72,7 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+
         public string CanSplit
         {
             get => canSplit;
@@ -116,6 +119,17 @@ namespace WpfPrac.ViewModels
                 {
                     roundNubmer = value;
                     RaisePropertyChanged("RoundNubmer");
+                }
+            }
+        }
+
+        public CountModel CountModel { get => countModel;
+            set
+            {
+                if (countModel != value)
+                {
+                    countModel = value;
+                    RaisePropertyChanged("CountModel");
                 }
             }
         }
