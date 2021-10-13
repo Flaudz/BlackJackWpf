@@ -80,6 +80,7 @@ namespace WpfPrac.Models
         // Check for ace in hand
         public void CheckAce()
         {
+            int FakeValue = this.Value;
             if (this.Value > 21)
             {
                 foreach (Card forCard in this.Cards)
@@ -90,6 +91,30 @@ namespace WpfPrac.Models
                         this.Value -= 10;
                         break;
                     }
+                }
+            }
+            else
+            {
+                foreach (Card card in this.Cards)
+                {
+                    if(card.Value == 1)
+                    {
+                        if(FakeValue+10 < 22)
+                        {
+                            card.Value += 10;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void FixZeroError()
+        {
+            if (this.Value == 0)
+            {
+                foreach (Card card in this.Cards)
+                {
+                    this.Value += card.Value;
                 }
             }
         }
