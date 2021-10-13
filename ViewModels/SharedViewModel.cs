@@ -491,7 +491,7 @@ namespace WpfPrac.ViewModels
                     if(Player.Value < 12)
                     {
                         Hit();
-                        FixZeroError();
+                        Player.FixZeroError();
                     }
 
                     if(Dealer.Value < 7)
@@ -499,7 +499,7 @@ namespace WpfPrac.ViewModels
                         if(Player.Value < 12)
                         {
                             Hit();
-                            FixZeroError();
+                            Player.FixZeroError();
                         }
                         else
                         {
@@ -513,12 +513,12 @@ namespace WpfPrac.ViewModels
                         if(Player.Value < 17 && RealCount < -1)
                         {
                             Hit();
-                            FixZeroError();
+                            Player.FixZeroError();
                         }
                         else if(Player.Value < 12)
                         {
                             Hit();
-                            FixZeroError();
+                            Player.FixZeroError();
                         }
                         else
                         {
@@ -532,15 +532,6 @@ namespace WpfPrac.ViewModels
             stillGoing = true;
         }
 
-        protected void FixZeroError()
-        {
-            if(Player.Value == 0)
-            {
-                foreach (Card card in Player.Cards)
-                {
-                    Player.Value += card.Value;
-                }
-            }
-        }
+        
     }
 }
