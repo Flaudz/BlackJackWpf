@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using WpfPrac.Models;
 using WpfPrac.ViewModels.Commands;
+using AiTest2ML.Model;
 
 namespace WpfPrac.ViewModels
 {
@@ -148,20 +149,19 @@ namespace WpfPrac.ViewModels
 
             if(Player.Value > 21)
             {
-                DataModel.Add(new DataModel() { MyValue = PlayerStartValue, DealersValue = DealersStartValue, HitOr = 10, RealCount = CountModel.Count });
+                DataModel.Add(new DataModel() { });
                 DealDealerTempCard();
                 CheckWinner();
             }
             else
             {
-                DataModel.Add(new DataModel() { MyValue = PlayerStartValue, DealersValue = DealersStartValue, HitOr = 100, RealCount = CountModel.Count });
             }
         }
 
         public async Task Stay()
         {
             DealerTempCardVisibility = "Visible";
-            await DealersTurn();
+            DealersTurn();
             CheckWinner();
         }
 
@@ -171,13 +171,11 @@ namespace WpfPrac.ViewModels
         {
             while (Dealer.Value < 17)
             {
-                await DealDealerTempCard();
+                DealDealerTempCard();
                 if (Dealer.Cards.Count != 1 && Dealer.Value < 17)
                 {
                     Dealer.AddCard(Deck);
                 }
-                if(!EnabledBot)
-                    await Task.Delay(1000);
             }
             MakeCountFromRound();
             Count = Deck.PlayDeck.Count;
@@ -251,6 +249,22 @@ namespace WpfPrac.ViewModels
                 BothWon = true;
                 Player.JustWon = true;
             }
+            if(Player.Value != 0 || Dealer.Value != 0)
+            {
+                if (Player.JustWon && Player.Cards.Count == 2)
+                {
+                    DataModel.Add(new DataModel() { PlayerValue = (int)Player.Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = true});
+                }
+                else if(Player.JustWon && Player.Cards.Count == 3)
+                {
+                    DataModel.Add(new DataModel() { PlayerValue = (int)Player.Value - Player.Cards[2].Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = false });
+                }
+                else if (!Player.JustWon && Player.Cards.Count == 3)
+                {
+                    DataModel.Add(new DataModel() { PlayerValue = (int)Player.Value - Player.Cards[2].Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = true });
+                }
+            }
+
             RoundNubmer++;
             Player.Value = 0;
             HaveAWinner = "false";
@@ -260,15 +274,9 @@ namespace WpfPrac.ViewModels
             {
                 NoMoney = "false";
             }
-
-            if(RoundNubmer == 100)
+            if(EnabledBot && RoundNubmer < 1000)
             {
-                
-            }
-            else
-            {
-                if(EnabledBot)
-                    SetName(Player.Name);
+                SetName(Player.Name);
             }
         } 
 
@@ -333,7 +341,15 @@ namespace WpfPrac.ViewModels
 
             CountModel = new CountModel();
 
-            using (var writer = new StreamWriter(@"C:\Users\nico936d\Desktop\MyData.csv"))
+            for (int i = 0; i < DataModel.Count; i++)
+            {
+                if(DataModel[i].PlayerValue == 0 && DataModel[i].DealerValue == 0)
+                {
+                    DataModel.Remove(DataModel[i]);
+                }
+            }
+
+            using (var writer = new StreamWriter(@"C:\Users\nico936d\Desktop\MyData2.csv"))
             using (var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csvWriter.WriteRecords(DataModel);
@@ -521,17 +537,17 @@ namespace WpfPrac.ViewModels
                 }
                 else if(Player.JustWon == false)
                 {
-                    if (Player.PreviousBet * 2 % 2 == 0)
+                    if(Player.PreviousBet*2%2 == 0)
                         Player.SetBet(Player.PreviousBet * 2);
                     else
                     {
-                        Player.SetBet(1);
+                        Player.SetBet(Player.Money);
                     }
                 }
             }
             else
             {
-                Player.SetBet(1);
+                Player.SetBet(Player.PreviousBet);
                 BothWon = false;
             }
             StartDeal();
@@ -543,13 +559,25 @@ namespace WpfPrac.ViewModels
             bool stillGoing = true;
             while (Player.Value < 22 && stillGoing)
             {
-                Hit();
-                FixZeroError();
-                if(Player.Value > 21)
+                // Add input data
+                var input = new ModelInput() { PlayerValue = Player.Value, DealerValue = Dealer.Value, RealCount = CountModel.Count };
+
+                // Load model and predict output of sample data
+                ModelOutput result = ConsumeModel.Predict(input);
+
+                if(result.Prediction == "True")
                 {
+                    Stay();
                     stillGoing = false;
                 }
+                else if(result.Prediction == "False")
+                {
+                    Hit();
+                    FixZeroError();
+                }
             }
+
+            stillGoing = true;
         }
 
         protected void FixZeroError()

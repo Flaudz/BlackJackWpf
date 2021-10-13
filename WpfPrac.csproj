@@ -15,4 +15,8 @@
     <PackageReference Include="CsvHelper" Version="27.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\AI-Test\AiTest2ML.Model\AiTest2ML.Model.csproj" />
+  </ItemGroup>
+
 </Project>

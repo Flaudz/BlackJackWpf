@@ -26,8 +26,8 @@ namespace WpfPrac.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            Thread.Sleep(100);
             SharedViewModel.EnabledBot = true;
+            SharedViewModel.RoundNubmer = 0;
             SharedViewModel.SetName(SharedViewModel.Player.Name);
         }
     }

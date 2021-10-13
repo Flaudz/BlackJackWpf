@@ -8,11 +8,12 @@ namespace WpfPrac.Models
 {
     public class DataModel
     {
-        private float myValue, dealersValue, hitOr, realCount;
+        private int realCount, playerValue, dealerValue;
+        private bool shouldStay;
 
-        public float MyValue { get => myValue; set => myValue = value; }
-        public float DealersValue { get => dealersValue; set => dealersValue = value; }
-        public float HitOr { get => hitOr; set => hitOr = value; }
-        public float RealCount { get => realCount; set => realCount = value; }
+        public int RealCount { get => realCount; set => realCount = value; }
+        public int PlayerValue { get => playerValue; set => playerValue = value; }
+        public int DealerValue { get => dealerValue; set => dealerValue = value; }
+        public bool ShouldStay { get => shouldStay; set => shouldStay = value; }
     }
 }
