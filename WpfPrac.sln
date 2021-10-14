@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfPrac", "WpfPrac.csproj", "{36973983-B799-4032-AA99-FB91F1947364}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AiTest2ML.Model", "..\..\AI-Test\AiTest2ML.Model\AiTest2ML.Model.csproj", "{51F3E5AB-86E8-4021-A909-55C97A5BDF4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AiTest2ML.Model", "..\..\AI-Test\AiTest2ML.Model\AiTest2ML.Model.csproj", "{8CEF36A5-ED7A-4511-8ABC-4BC04FD13594}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{36973983-B799-4032-AA99-FB91F1947364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36973983-B799-4032-AA99-FB91F1947364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36973983-B799-4032-AA99-FB91F1947364}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51F3E5AB-86E8-4021-A909-55C97A5BDF4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51F3E5AB-86E8-4021-A909-55C97A5BDF4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51F3E5AB-86E8-4021-A909-55C97A5BDF4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51F3E5AB-86E8-4021-A909-55C97A5BDF4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CEF36A5-ED7A-4511-8ABC-4BC04FD13594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CEF36A5-ED7A-4511-8ABC-4BC04FD13594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CEF36A5-ED7A-4511-8ABC-4BC04FD13594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CEF36A5-ED7A-4511-8ABC-4BC04FD13594}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

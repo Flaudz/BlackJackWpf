@@ -84,38 +84,41 @@ namespace WpfPrac.Models
         // Check for ace in hand
         public void CheckAce()
         {
-            if (Convert.ToInt64(this.Value) < 22)
+            int FakeValue = (int)this.Value;
+            if (this.Value > 21)
             {
-                foreach (Card forCard in Cards)
+                foreach (Card forCard in this.Cards)
                 {
                     if (forCard.Value == 11)
                     {
                         forCard.Value = 1;
-                        Value -= 10;
+                        this.Value -= 10;
                         break;
                     }
                 }
             }
-            FixAce();
+            else
+            {
+                foreach (Card card in this.Cards)
+                {
+                    if (card.Value == 1)
+                    {
+                        if (FakeValue + 10 < 22)
+                        {
+                            card.Value += 10;
+                        }
+                    }
+                }
+            }
         }
 
-        protected void FixAce()
+        public void FixZeroError()
         {
-            int fakeValue = (int)Convert.ToInt64(this.Value);
-            foreach (Card item in this.Cards)
+            if (this.Value == 0)
             {
-                if(item.Value == 1)
+                foreach (Card card in this.Cards)
                 {
-                    fakeValue += 10;
-                    if(fakeValue !> 21)
-                    {
-                        item.Value += 10;
-                        this.Value += 10;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    this.Value += card.Value;
                 }
             }
         }

@@ -153,9 +153,6 @@ namespace WpfPrac.ViewModels
                 DealDealerTempCard();
                 CheckWinner();
             }
-            else
-            {
-            }
         }
 
         public async Task Stay()
@@ -249,34 +246,27 @@ namespace WpfPrac.ViewModels
                 BothWon = true;
                 Player.JustWon = true;
             }
-            if(Player.Value != 0 || Dealer.Value != 0)
+
+            if (Player.JustWon)
             {
-                if (Player.JustWon && Player.Cards.Count == 2)
-                {
-                    DataModel.Add(new DataModel() { PlayerValue = (int)Player.Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = true});
-                }
-                else if(Player.JustWon && Player.Cards.Count == 3)
-                {
-                    DataModel.Add(new DataModel() { PlayerValue = (int)Player.Value - Player.Cards[2].Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = false });
-                }
-                else if (!Player.JustWon && Player.Cards.Count == 3)
-                {
-                    DataModel.Add(new DataModel() { PlayerValue = (int)Player.Value - Player.Cards[2].Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = true });
-                }
+                DataModel.Add(new DataModel() { CardCount = Player.Cards.Count, PlayerValue = (int)Player.Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = true});
+            }
+            else if(Player.JustWon == false && Player.Value < 22)
+            {
+                DataModel.Add(new DataModel() { CardCount = Player.Cards.Count, PlayerValue = (int)Player.Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count, ShouldStay = false });
+            }
+            else if(Player.JustWon == false && Player.Value > 21)
+            {
+                DataModel.Add(new DataModel() { CardCount = Player.Cards.Count, PlayerValue = (int)Player.Value - Player.Cards[Player.Cards.Count-1].Value, DealerValue = Dealer.Cards[0].Value, RealCount = CountModel.Count-1, ShouldStay = true });
             }
 
             RoundNubmer++;
-            Player.Value = 0;
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
 
             if(Player.Money < 1)
             {
                 NoMoney = "false";
-            }
-            if(EnabledBot && RoundNubmer < 1000)
-            {
-                SetName(Player.Name);
             }
         } 
 
@@ -303,8 +293,6 @@ namespace WpfPrac.ViewModels
             Dealer.Hand1 = new Hand();
             Dealer.Hand2 = new Hand();
             Dealer.Cards.Clear();
-
-
 
             BetVisibility = ChangeVisibility();
         }
@@ -349,7 +337,7 @@ namespace WpfPrac.ViewModels
                 }
             }
 
-            using (var writer = new StreamWriter(@"C:\Users\nico936d\Desktop\MyData2.csv"))
+            using (var writer = new StreamWriter(@"C:\Users\nico936d\Desktop\MyData3.csv"))
             using (var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csvWriter.WriteRecords(DataModel);
@@ -560,7 +548,7 @@ namespace WpfPrac.ViewModels
             while (Player.Value < 22 && stillGoing)
             {
                 // Add input data
-                var input = new ModelInput() { PlayerValue = Player.Value, DealerValue = Dealer.Value, RealCount = CountModel.Count };
+                var input = new ModelInput() { PlayerValue = Player.Value, DealerValue = Dealer.Value, RealCount = CountModel.Count, CardCount = 3 };
 
                 // Load model and predict output of sample data
                 ModelOutput result = ConsumeModel.Predict(input);
@@ -573,22 +561,11 @@ namespace WpfPrac.ViewModels
                 else if(result.Prediction == "False")
                 {
                     Hit();
-                    FixZeroError();
+                    Player.FixZeroError();
                 }
             }
 
             stillGoing = true;
-        }
-
-        protected void FixZeroError()
-        {
-            if(Player.Value == 0)
-            {
-                foreach (Card card in Player.Cards)
-                {
-                    Player.Value += card.Value;
-                }
-            }
         }
     }
 }

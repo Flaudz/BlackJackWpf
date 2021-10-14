@@ -134,6 +134,6 @@
         <Button IsEnabled="{Binding HaveAWinner, UpdateSourceTrigger=PropertyChanged}" Content="Hit" FontSize="30" Command="{Binding HitCommand, Source={StaticResource SharedViewModel}}" Grid.Column="1" Grid.Row="4" Width="175" />
         <Button IsEnabled="{Binding HaveAWinner, UpdateSourceTrigger=PropertyChanged}" Content="Stay" FontSize="30" Grid.Column="2" Grid.Row="4" Command="{Binding StayCommand, Source={StaticResource SharedViewModel}}" Width="175"/>
         <Button IsEnabled="{Binding CanSplit, UpdateSourceTrigger=PropertyChanged}" Content="Split" FontSize="30" Grid.Column="3" Grid.Row="4" Command="{Binding SplitCommand, Source={StaticResource SharedViewModel}}" Width="175"/>
-        <TextBlock Text="{Binding RealCount, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="10"/>
+        <TextBlock Text="{Binding RoundNubmer, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="10"/>
     </Grid>
 </UserControl>
