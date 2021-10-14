@@ -25,6 +25,7 @@ namespace WpfPrac.ViewModels.Commands
 
         public void Execute(object parameter)
         {
+            SharedViewModel.Player.Money = 1250;
             SharedViewModel.EnabledBot = true;
             SharedViewModel.SetName(SharedViewModel.Player.Name);
         }

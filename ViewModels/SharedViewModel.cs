@@ -12,6 +12,9 @@ namespace WpfPrac.ViewModels
 {
     public class SharedViewModel : CommandViewModel
     {
+        private DataModel tempData = new();
+        private int roundNumber = 0;
+
         private int realCount = 0;
 
         public int RealCount { get => realCount;
@@ -24,6 +27,9 @@ namespace WpfPrac.ViewModels
                 }
             }
         }
+
+        public DataModel TempData { get => tempData; set => tempData = value; }
+        public int RoundNumber { get => roundNumber; set => roundNumber = value; }
 
         // Constructor
         public SharedViewModel()
@@ -92,6 +98,11 @@ namespace WpfPrac.ViewModels
                 CanSplit = "True";
 
             Count = Deck.PlayDeck.Count;
+            MakeCountFromRound();
+            TempData.PlayerValue = Player.Value;
+            TempData.DealerValue = Dealer.Value;
+            TempData.RealCount = RealCount;
+
         }
 
         public async Task DoubbleDown(string choice)
@@ -137,13 +148,24 @@ namespace WpfPrac.ViewModels
         {
             Player.AddCard(Deck);
 
-
             Count = Deck.PlayDeck.Count;
 
             if(Player.Value > 21)
             {
+                TempData.ShouldHit = false;
+                Data.AddToList(TempData);
+                TempData = new();
                 DealDealerTempCard();
                 CheckWinner();
+            }
+            else
+            {
+                TempData.ShouldHit = true;
+                Data.AddToList(TempData);
+                TempData = new();
+                TempData.DealerValue = Dealer.Value;
+                TempData.PlayerValue = Player.Value;
+                TempData.RealCount = RealCount;
             }
         }
 
@@ -153,7 +175,6 @@ namespace WpfPrac.ViewModels
             await DealersTurn();
             CheckWinner();
         }
-
 
         // Late Game
         private async Task DealersTurn()
@@ -230,6 +251,15 @@ namespace WpfPrac.ViewModels
                     }
                 }
             }
+            RoundNumber++;
+            if(Player.Value < 22)
+            {
+                if(Winner.Name == Player.Name)
+                {
+                    TempData.ShouldHit = false;
+                }
+            }
+
             Player.Value = 0;
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
@@ -238,6 +268,12 @@ namespace WpfPrac.ViewModels
             {
                 NoMoney = "false";
             }
+            
+            if(EnabledBot && Player.Money > 1000)
+            {
+                SetName(Player.Name);
+            }
+
         } 
 
         // MiniReset will reset the bet, value, cards and insurance so player can start a new round
@@ -264,7 +300,8 @@ namespace WpfPrac.ViewModels
             Dealer.Hand2 = new Hand();
             Dealer.Cards.Clear();
 
-            BetVisibility = ChangeVisibility();
+            if(!EnabledBot)
+                BetVisibility = ChangeVisibility();
         }
 
         // This will reset the player completly so the player can start from a new start.
@@ -276,7 +313,7 @@ namespace WpfPrac.ViewModels
             HaveAWinner = "true";
             Winner.Name = "Unknown";
 
-            Player.Money = 250;
+            Player.Money = 1250;
             Player.Name = "Unknown";
             Player.Bet = 0;
             Player.Value = 0;
@@ -456,82 +493,54 @@ namespace WpfPrac.ViewModels
 
         public void BotSetBet()
         {
-            if(RealCount > -2 && RealCount < 2)
-            {
-                Player.SetBet(25);
-            }
-            else if(RealCount < -1)
-            {
-                Player.SetBet(1);
-            }
-            else if(RealCount > 1 && RealCount < 6)
-            {
-                Player.SetBet(50);
-            }
-            else if(RealCount > 4)
-            {
-                Player.SetBet(Player.Money);
-            }
+            Player.SetBet(1);
             StartDeal();
             BotStayOrHit();
         }
 
         public void BotStayOrHit()
         {
-            bool stillGoing = true;
-            while(Player.Value < 22 && stillGoing)
+            while (Player.Value < 22)
             {
-                if(Player.Money > Player.Bet+1 && RealCount > -1 && Player.Value == 11)
+
+                List<DataModel> tempList = new();
+                int shouldHitNum = 0;
+                if(Data.Data.Count != 0)
                 {
-                    stillGoing = false;
-                    DoubbleDown("yes");
+                    foreach (var list in Data.Data)
+                {
+                    if(list[0].DealerValue == Dealer.Value && list[0].PlayerValue == Player.Value && list[0].RealCount == RealCount)
+                    {
+                        tempList = list;
+                    }
                 }
-                else
+                }
+
+                if(tempList.Count != 0)
                 {
-                    if(Player.Value < 12)
+                    foreach (DataModel data in tempList)
                     {
-                        Hit();
-                        Player.FixZeroError();
-                    }
-
-                    if(Dealer.Value < 7)
-                    {
-                        if(Player.Value < 12)
-                        {
-                            Hit();
-                            Player.FixZeroError();
-                        }
+                        if (data.ShouldHit)
+                            shouldHitNum++;
                         else
-                        {
-                            stillGoing = false;
-                            Stay();
+                            shouldHitNum--;
+                    }
+                }
 
-                        }
-                    }
-                    else if(Dealer.Value > 6)
-                    {
-                        if(Player.Value < 17 && RealCount < -1)
-                        {
-                            Hit();
-                            Player.FixZeroError();
-                        }
-                        else if(Player.Value < 12)
-                        {
-                            Hit();
-                            Player.FixZeroError();
-                        }
-                        else
-                        {
-                            stillGoing = false;
-                            Stay();
-                        }
-                    }
+                if(shouldHitNum >= 0)
+                {
+                    Hit();
+                    Player.FixZeroError();
+                    if (Player.Value > 21)
+                        break;
+                }
+                else if(shouldHitNum < 0)
+                {
+                    Stay();
+                    break;
                 }
             }
 
-            stillGoing = true;
         }
-
-        
     }
 }

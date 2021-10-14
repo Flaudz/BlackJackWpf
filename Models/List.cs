@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace WpfPrac.Models
 {
-
-    
-
     public class MyList<T> : INotifyPropertyChanged
     {
         private T[] array = new T[0];

@@ -59,7 +59,7 @@ namespace WpfPrac.Models
         {
             Name = name;
             Value = 0;
-            Money = 250;
+            Money = 1250;
             Bet = 0;
             Insurance = 0;
 

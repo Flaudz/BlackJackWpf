@@ -18,6 +18,7 @@ namespace WpfPrac.ViewModels
         private Player dealer = new("Dealer");
         private int beforeMoney = 0;
         private int count;
+        private DataModelList data = new();
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -108,9 +109,7 @@ namespace WpfPrac.ViewModels
             }
         }
 
-
-
-
+        public DataModelList Data { get => data; set => data = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
