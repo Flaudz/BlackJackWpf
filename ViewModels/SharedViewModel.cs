@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WpfPrac.Models;
 using WpfPrac.ViewModels.Commands;
 using AiTest2ML.Model;
+using System.Diagnostics;
 
 namespace WpfPrac.ViewModels
 {
@@ -268,6 +269,10 @@ namespace WpfPrac.ViewModels
             {
                 NoMoney = "false";
             }
+            if(EnabledBot && RoundNubmer < 1000)
+            {
+                SetName(Player.Name);
+            }
         } 
 
         // MiniReset will reset the bet, value, cards and insurance so player can start a new round
@@ -337,10 +342,17 @@ namespace WpfPrac.ViewModels
                 }
             }
 
-            using (var writer = new StreamWriter(@"C:\Users\nico936d\Desktop\MyData3.csv"))
-            using (var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            using (FileStream fs = new FileStream(@"C:\Users\nico936d\Desktop\MyDataBackUp.csv", FileMode.Append, FileAccess.Write))
             {
-                csvWriter.WriteRecords(DataModel);
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    string csvString = "";
+                    foreach (var item in DataModel)
+                    {
+                        csvString = $"{item.RealCount},{item.PlayerValue},{item.DealerValue},{item.ShouldStay},{item.CardCount}";
+                        sw.WriteLine(csvString);
+                    }
+                }
             }
 
             LoginVisibility = ChangeVisibility();
