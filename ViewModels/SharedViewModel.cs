@@ -363,7 +363,7 @@ namespace WpfPrac.ViewModels
                         // hand Bustede - Dealer vinder
                         Winner.Name = Dealer.Name;
                     }
-                    if (Dealer.Value > 21)
+                    else if (Dealer.Value > 21)
                     {
                         // Dealer Bustede - hand vinder
                         Winner.Name = Player.Name;
