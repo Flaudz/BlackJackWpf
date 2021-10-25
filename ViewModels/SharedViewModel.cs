@@ -49,7 +49,6 @@ namespace WpfPrac.ViewModels
             if (EnabledBot)
             {
                 Player.Name = name;
-                Deck.MakeDeck();
                 if (Deck.PlayDeck.Count == 52)
                     RealCount = 0;
                 BotSetBet();
@@ -58,7 +57,6 @@ namespace WpfPrac.ViewModels
             {
                 Player.Name = name;
                 BetVisibility = ChangeVisibility();
-                Deck.MakeDeck();
             }
         }
 
