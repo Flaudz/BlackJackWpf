@@ -86,8 +86,18 @@ namespace WpfPrac.ViewModels
 
             Player.AddCard(Deck);
 
+            if (Player.CheckBlackJack())
+            {
+                DealDealerTempCard();
+                CheckWinner();
+            }
+
             if (Player.Cards[0].Value == Player.Cards[1].Value)
                 CanSplit = "True";
+            else
+            {
+                CanSplit = "False";
+            }
 
             Count = Deck.PlayDeck.Count;
         }
