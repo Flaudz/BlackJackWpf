@@ -254,7 +254,6 @@ namespace WpfPrac.ViewModels
             ShowWinner = ChangeVisibility();
             if(Player.Value > 21)
                 PlaySound(BustedSound);
-            Player.Value = 0;
 
             if (Player.Money < 1)
             {

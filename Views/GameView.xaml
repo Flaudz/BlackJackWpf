@@ -135,7 +135,7 @@
         <Button IsEnabled="{Binding HaveAWinner, UpdateSourceTrigger=PropertyChanged}" Content="Stay" FontSize="30" Grid.Column="2" Grid.Row="4" Command="{Binding StayCommand, Source={StaticResource SharedViewModel}}" Width="175"/>
         <Button IsEnabled="{Binding CanSplit, UpdateSourceTrigger=PropertyChanged}" Content="Split" FontSize="30" Grid.Column="3" Grid.Row="4" Command="{Binding SplitCommand, Source={StaticResource SharedViewModel}}" Width="175"/>
 
-        <Image Grid.ColumnSpan="2" Grid.RowSpan="2" Source="C:\Users\nico936d\Documents\LAB\Lab-2021\WpfPractice\WpfPrac\bin\Debug\net5.0-windows\Images\TopChips.png" Grid.Column="5" Grid.Row="3"/>
+        <Image Grid.ColumnSpan="2" Grid.RowSpan="2" Source="C:\Users\nico936d\Documents\LAB\Lab-2021\WpfPrac\bin\Debug\net5.0-windows\Images\TopChips.png" Grid.Column="5" Grid.Row="3"/>
         <TextBlock Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="10"/>
     </Grid>
 </UserControl>
