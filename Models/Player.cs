@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Media;
+using System.Threading;
 using WpfPrac.Models;
 
 namespace WpfPrac.Models
@@ -74,6 +76,7 @@ namespace WpfPrac.Models
             Cards.Add(card);
             Value += card.Value;
             this.CheckAce();
+            
             RaisePropertyChanged("Cards");
         }
 

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200"
              DataContext="{StaticResource SharedViewModel}">
-    <Grid Background="White" Visibility="{Binding GameVisibility, UpdateSourceTrigger=PropertyChanged}" >
+    <Grid Background="DarkGreen" Visibility="{Binding GameVisibility, UpdateSourceTrigger=PropertyChanged}" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="*"/>
@@ -134,6 +134,8 @@
         <Button IsEnabled="{Binding HaveAWinner, UpdateSourceTrigger=PropertyChanged}" Content="Hit" FontSize="30" Command="{Binding HitCommand, Source={StaticResource SharedViewModel}}" Grid.Column="1" Grid.Row="4" Width="175" />
         <Button IsEnabled="{Binding HaveAWinner, UpdateSourceTrigger=PropertyChanged}" Content="Stay" FontSize="30" Grid.Column="2" Grid.Row="4" Command="{Binding StayCommand, Source={StaticResource SharedViewModel}}" Width="175"/>
         <Button IsEnabled="{Binding CanSplit, UpdateSourceTrigger=PropertyChanged}" Content="Split" FontSize="30" Grid.Column="3" Grid.Row="4" Command="{Binding SplitCommand, Source={StaticResource SharedViewModel}}" Width="175"/>
+
+        <Image Grid.ColumnSpan="2" Grid.RowSpan="2" Source="C:\Users\nico936d\Documents\LAB\Lab-2021\WpfPractice\WpfPrac\bin\Debug\net5.0-windows\Images\TopChips.png" Grid.Column="5" Grid.Row="3"/>
         <TextBlock Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="10"/>
     </Grid>
 </UserControl>
