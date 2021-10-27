@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WpfPrac.Models
@@ -86,13 +88,14 @@ namespace WpfPrac.Models
             AllCards.Add(new Card("Jack♠️", 10, @$"{Environment.CurrentDirectory}/Images/Spade/Jack.png"));
             AllCards.Add(new Card("King♠️", 10, @$"{Environment.CurrentDirectory}/Images/Spade/King.png"));
             AllCards.Add(new Card("Queen♠️", 10, @$"{Environment.CurrentDirectory}/Images/Spade/Queen.png"));
-
-            this.MakeDeck();
         }
 
 
         public void MakeDeck()
         {
+            SoundPlayer shuffleSound = new(@"C:\Users\nico936d\Documents\Audacity\Blanding.wav");
+            shuffleSound.Play();
+            Thread.Sleep(2500);
             this.PlayDeck = new Queue<Card>();
             Random random = new();
             Card[] tempArr = AllCards.OrderBy(x => random.Next()).ToArray();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using WpfPrac.Models;
@@ -18,6 +19,8 @@ namespace WpfPrac.ViewModels
         private Player dealer = new("Dealer");
         private int beforeMoney = 0;
         private int count;
+        private SoundPlayer cardDeal = new(@"C:\Users\nico936d\Documents\Audacity\KortLægning.wav");
+        private SoundPlayer bustedSound = new(@"C:\Users\nico936d\Documents\Audacity\ThatRealBusted.wav");
 
         private string haveAWinner = "true";
         private string noMoney = "true";
@@ -108,9 +111,8 @@ namespace WpfPrac.ViewModels
             }
         }
 
-
-
-
+        public SoundPlayer CardDealSound { get => cardDeal; set => cardDeal = value; }
+        public SoundPlayer BustedSound { get => bustedSound; set => bustedSound = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

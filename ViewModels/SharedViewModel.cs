@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,6 +57,7 @@ namespace WpfPrac.ViewModels
             else
             {
                 Player.Name = name;
+                Deck.MakeDeck();
                 BetVisibility = ChangeVisibility();
             }
         }
@@ -79,12 +81,15 @@ namespace WpfPrac.ViewModels
             BeforeMoney = Player.Money + Player.Bet;
 
             Dealer.AddCard(Deck);
+            PlaySound(CardDealSound);
 
             Player.AddCard(Deck);
+            PlaySound(CardDealSound);
 
             DealerTempCard = Deck.PickCard();
 
             Player.AddCard(Deck);
+            PlaySound(CardDealSound);
 
             if (Player.CheckBlackJack())
             {
@@ -109,6 +114,9 @@ namespace WpfPrac.ViewModels
                 Player.Money -= Player.Bet;
                 Player.Bet *= 2;
                 Hit();
+
+                // Fix the bug where player value becomes 0
+                Player.FixZeroError();
                 if(Player.Value > 21)
                 {
                     CheckWinner();
@@ -143,8 +151,10 @@ namespace WpfPrac.ViewModels
 
         public void Hit()
         {
+            if (Deck.PlayDeck.Count == 0)
+                Deck.MakeDeck();
             Player.AddCard(Deck);
-
+            PlaySound(CardDealSound);
 
             Count = Deck.PlayDeck.Count;
 
@@ -172,6 +182,7 @@ namespace WpfPrac.ViewModels
                 if (Dealer.Cards.Count != 1 && Dealer.Value < 17)
                 {
                     Dealer.AddCard(Deck);
+                    PlaySound(CardDealSound);
                 }
                 if(!EnabledBot)
                     await Task.Delay(1000);
@@ -238,11 +249,14 @@ namespace WpfPrac.ViewModels
                     }
                 }
             }
-            Player.Value = 0;
+            
             HaveAWinner = "false";
             ShowWinner = ChangeVisibility();
+            if(Player.Value > 21)
+                PlaySound(BustedSound);
+            Player.Value = 0;
 
-            if(Player.Money < 1)
+            if (Player.Money < 1)
             {
                 NoMoney = "false";
             }
@@ -315,6 +329,9 @@ namespace WpfPrac.ViewModels
             {
                 Dealer.Cards.Add(DealerTempCard);
                 Dealer.Value += DealerTempCard.Value;
+
+                PlaySound(CardDealSound);
+
                 if (Dealer.CheckBlackJack())
                 {
                     CheckWinner();
@@ -540,6 +557,12 @@ namespace WpfPrac.ViewModels
             stillGoing = true;
         }
 
-        
+        // Sound play
+        private void PlaySound(SoundPlayer sound)
+        {
+            sound.Play();
+            Thread.Sleep(500);
+        }
+
     }
 }
