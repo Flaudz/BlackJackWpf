@@ -8,6 +8,7 @@
              d:DesignHeight="800" d:DesignWidth="1200"
              DataContext="{StaticResource SharedViewModel}">
     <Canvas Background="White" Visibility="{Binding BetVisibility, UpdateSourceTrigger=PropertyChanged}">
+        <TextBlock Text="{Binding Player.Money, UpdateSourceTrigger=PropertyChanged}" Width="800" TextAlignment="Center" Canvas.Left="200" FontSize="50"/>
         <TextBlock Text="How much would you like to bet?" FontSize="50" Width="800" TextAlignment="Center" Canvas.Left="200" Canvas.Top="200"/>
         <TextBox x:Name="BetInput" Width="250" FontSize="40" Canvas.Left="475" BorderBrush="Black" BorderThickness="2" Canvas.Top="300"/>
         <Button Command="{Binding StartGameCommand, Source={StaticResource SharedViewModel}}" CommandParameter="{Binding Text, ElementName=BetInput}" Content="Start Game" Background="White" FontWeight="Bold" FontSize="25" Width="150" Canvas.Left="525" Canvas.Top="400"/>
